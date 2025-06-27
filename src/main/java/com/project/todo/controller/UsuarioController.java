@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/tarefa")
+@RequestMapping("/usuario")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
@@ -23,17 +23,18 @@ public class UsuarioController {
        return ResponseEntity.ok().body(usuarioDto);
     }
 
-    @GetMapping
-    public ResponseEntity<UsuarioDto> buscar(@RequestParam Integer id){
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDto> buscar(@PathVariable Integer id) {
         Optional<Usuario> usuarioOpt = usuarioService.buscarPorId(id);
-        if(usuarioOpt.isPresent()){
+        if (usuarioOpt.isPresent()) {
             UsuarioDto usuarioDto = new UsuarioDto(usuarioOpt.get());
             return ResponseEntity.ok(usuarioDto);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/usuario/{id}")
+
+    @PutMapping("/{id}")
     public ResponseEntity<UsuarioDto> atualizar(
             @PathVariable Integer id,
             @RequestBody @Valid Usuario novoDadoUsuario
@@ -43,14 +44,13 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuarioDto);
     }
 
-    @DeleteMapping("/usuario/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<UsuarioDto> deletar(@PathVariable Integer id) {
         Optional<Usuario> removidoOpt = usuarioService.remover(id);
         if (removidoOpt.isPresent()) {
             UsuarioDto usuarioDto = new UsuarioDto(removidoOpt.get());
             return ResponseEntity.ok().body(usuarioDto);
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }
